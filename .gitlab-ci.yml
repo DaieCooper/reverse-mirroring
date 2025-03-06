@@ -1,0 +1,12 @@
+stages:
+  - test
+
+Test:
+  stage: test
+  image: python:3.10.6-slim-buster
+  tags:
+    - k8s
+  script:
+    - python3 ./script.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
