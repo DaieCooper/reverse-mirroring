@@ -24,7 +24,7 @@ def delete_obsolete_refs(
     for ref_name in obsolete_refs:
         try:
             ref = repo.get_git_ref(f"{ref_type}/{ref_name}")
-            ref.delete()
+            #ref.delete()
             logging.info("Deleted obsolete %s", ref_name)
         except github_api.GithubException as e:
             logging.error("Failed to delete %s: %s", ref_name, e)
@@ -52,17 +52,13 @@ if __name__ == "__main__":
         branch.name for branch in github_repo.get_branches() if not branch.protected
     ]
     github_tags = [tag.name for tag in github_repo.get_tags()]
-    logging.info(
-        "List of %s gitlab project branches: %s", project_name, gitlab_branches
-    )
-    logging.info("List of %s gitlab project tags: %s", project_name, gitlab_tags)
-    logging.info(
-        "List of %s github project branches: %s", project_name, github_branches
-    )
-    logging.info("List of %s github project branches: %s", project_name, github_tags)
+    logging.info("%s gitlab project branches: %s", project_name, gitlab_branches)
+    logging.info("%s gitlab project tags: %s", project_name, gitlab_tags)
+    logging.info("%s github project branches: %s", project_name, github_branches)
+    logging.info("%s github project tags: %s", project_name, github_tags)
     obsolete_branches = list(set(github_branches) - set(gitlab_branches))
     obsolete_tags = list(set(github_tags) - set(gitlab_tags))
-    logging.info("List of obsolete branches: %s", obsolete_branches)
-    logging.info("List of obsolete tags: %s", obsolete_tags)
+    logging.info("Obsolete branches: %s", obsolete_branches)
+    logging.info("Obsolete tags: %s", obsolete_tags)
     delete_obsolete_refs(github_repo, "tags", obsolete_tags)
     delete_obsolete_refs(github_repo, "heads", obsolete_branches)
